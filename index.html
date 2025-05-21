@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lazreus Tech - Digital Solutions for Small Businesses</title>
+
+    <!--
+        Google Fonts
+        These fonts match the user's preferences from previous interactions:
+        - Montserrat: Used for navbar and headers
+        - Inter: Used for section titles/headings
+        - Roboto: Used for body content
+        - Lato: Used for footer text
+        - Fira Code: Used for code snippets
+
+        Note for backend developers: Consider loading these fonts locally
+        for better performance and privacy compliance.
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
+    <!--
+        Font Awesome for Icons
+        Used for social media icons, contact information icons, and UI elements.
+
+        Note for backend developers:
+        - Consider downloading and hosting these files locally for better performance
+        - Only the solid style is being loaded for better performance
+        - For production, consider using a package manager to include only needed icons
+    -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!--
+        Stylesheets and Scripts
+        - style.css: Main stylesheet with all styling
+        - script.js: JavaScript for interactive elements (navbar, animations, etc.)
+
+        Note for backend developers:
+        - Add analytics scripts here with proper privacy controls
+        - Consider implementing a script loader for performance
+        - Add meta tags for SEO and social sharing
+    -->
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <!--
+    Background Animation
+
+    This section creates the space-themed animated background with stars,
+    shooting stars, and nebula effects. The animation is handled by CSS
+    and enhanced with JavaScript for parallax effects when scrolling.
+
+    Note for backend developers:
+    - This is purely decorative and doesn't require backend integration
+    - The animation is optimized for performance but can be disabled for users
+      with reduced motion preferences using a media query in CSS
+    - Consider adding a toggle in user preferences to disable animations
+    -->
+    <div class="space-background">
+        <div class="stars"></div>
+        <div class="stars stars-2"></div>
+        <div class="stars stars-3"></div>
+        <div class="shooting-star"></div>
+        <div class="shooting-star"></div>
+        <div class="shooting-star"></div>
+        <div class="shooting-star"></div>
+        <div class="shooting-star"></div>
+        <div class="shooting-star"></div>
+        <div class="shooting-star"></div>
+        <div class="shooting-star"></div>
+        <div class="nebula nebula-1"></div>
+        <div class="nebula nebula-2"></div>
+        <div class="nebula nebula-3"></div>
+    </div>
+    <!-- End of Background Animation -->
+
+    <!--
+    Content Wrapper
+
+    This div wraps all page content and ensures it appears above the animated background.
+    All dynamic content should be placed within this wrapper.
+
+    Note for backend developers:
+    - This is the main container for all content that will be dynamically generated
+    - The z-index ensures content appears above the background animations
+    -->
+    <div class="content-wrapper">
+
+    <!--
+    Header Section with Navigation
+
+    The main navigation bar appears on all pages and includes:
+    - Logo/brand
+    - Main navigation links with active state
+    - Services dropdown menu
+    - CTA button
+
+    Note for backend developers:
+    - The active class should be dynamically applied based on current page/scroll position
+    - The dropdown menu items can be generated from a database/CMS
+    - The CTA button should trigger a modal or form submission
+    - Consider implementing server-side rendering for the navigation to improve SEO
+    -->
+    <header>
+            <nav class="navbar" role="navigation" aria-label="Main navigation">
+                <div class="navbar-left">
+                    <div class="navbar-brand">
+                        <a href="#home" aria-label="Lazreus Tech Home">
+                            <img src="photo.jpg" alt="Lazreus Tech Logo" class="navbar-logo">
+                            <span>Lazreus Tech</span>
+                        </a>
+                    </div>
+                </div>
+                <button class="navbar-toggler" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav" role="menubar">
+                        <li class="nav-item" role="none"><a class="nav-link active" href="#home" role="menuitem" aria-current="page">Home</a></li>
+                        <li class="nav-item" role="none"><a class="nav-link" href="#about" role="menuitem">About</a></li>
+                        <li class="nav-item dropdown" role="none">
+                            <a class="nav-link dropdown-toggle" href="#services" role="menuitem" aria-haspopup="true" aria-expanded="false">Services</a>
+                            <div class="dropdown-menu" aria-labelledby="servicesDropdown">
+                                <a class="dropdown-item" href="website-development.html">Website Development</a>
+                                <a class="dropdown-item" href="app-development.html">App Development</a>
+                                <a class="dropdown-item" href="devops-services.html">DevOps Services</a>
+                                <a class="dropdown-item" href="ux-design.html">UX Design</a>
+                                <a class="dropdown-item" href="creative-services.html">Creative Services</a>
+                                <a class="dropdown-item" href="promotional-assistance.html">Promotional Assistance</a>
+                                <a class="dropdown-item" href="inventory-management.html">Inventory Management</a>
+                                <a class="dropdown-item" href="wearables.html">Wearables</a>
+                            </div>
+                        </li>
+                        <li class="nav-item" role="none"><a class="nav-link" href="#contact" role="menuitem">Contact</a></li>
+                    </ul>
+                    <div class="navbar-cta">
+                        <button class="btn-consultation" aria-label="Get a Free Consultation">Get a Free Consultation</button>
+                    </div>
+                </div>
+            </nav>
+    </header>
+
+    <!--
+    Hero Section
+
+    The main landing section that introduces the company and its value proposition.
+    This is the first section users see when visiting the site.
+
+    Note for backend developers:
+    - The headline and description can be managed through a CMS
+    - The buttons should have event handlers for tracking engagement
+    - Consider A/B testing different headlines and CTAs
+    - This section has the ID "home" for direct linking and scroll tracking
+    -->
+    <section id="home">
+        <h1>Empowering Small Businesses with Cutting-Edge Tech Solutions</h1>
+        <p>Lazreus Tech is a modern digital solutions company dedicated to empowering small businesses and emerging enterprises. We specialize in delivering comprehensive technology services that help our clients streamline operations, enhance user experiences, and scale effectively in today's fast-paced digital economy.</p>
+        <button>Explore Our Services</button>
+        <button>Contact Us</button>
+    </section>
+
+    <!--
+    About Section
+
+    Provides information about the company, including founding date,
+    company type, location, and mission/vision statements.
+
+    Note for backend developers:
+    - All company information should be stored in a central configuration
+    - This allows for easy updates across the site
+    - Consider adding schema.org markup for better SEO
+    - This section has the ID "about" for direct linking and scroll tracking
+    -->
+    <section id="about">
+        <h2>About Lazreus Tech</h2>
+        <div class="company-info">
+            <p><strong>Founded:</strong> 2025</p>
+            <p><strong>Type:</strong> Private</p>
+            <p><strong>Headquarters:</strong> [Your Location]</p>
+            <p><strong>Industry:</strong> Technology Services</p>
+        </div>
+
+        <div class="mission">
+            <h3>Our Mission</h3>
+            <p>To empower growth and innovation for small and scaling businesses through reliable, high-quality technology solutions.</p>
+        </div>
+
+        <div class="vision">
+            <h3>Our Vision</h3>
+            <p>To become a trusted technology partner for startups and small enterprises worldwide, enabling them to scale with confidence and agility.</p>
+        </div>
+    </section>
+
+    <!--
+    Services Section
+
+    Displays a grid of service cards, each linking to a dedicated service page.
+    This is a key conversion section that showcases the company's offerings.
+
+    Note for backend developers:
+    - The service cards should be dynamically generated from a database/CMS
+    - Each card should include:
+      * Service name (h3)
+      * Short description (p)
+      * Link to the detailed service page
+    - Consider implementing filtering or categorization for larger service catalogs
+    - This section has the ID "services" for direct linking and scroll tracking
+    -->
+    <section id="services">
+        <h2>Our Core Services</h2>
+        <div class="services-grid">
+            <!--
+            Service Card
+
+            Each card represents a service offering with a title and brief description.
+
+            Note for backend developers:
+            - This is a template for a single service card
+            - In production, these would be generated in a loop from the services database
+            - Track clicks on these links for conversion analytics
+            -->
+            <div class="service-card">
+                <h3><a href="website-development.html">Website Development</a></h3>
+                <p>Custom, responsive, and scalable websites tailored to brand needs</p>
+            </div>
+            <div class="service-card">
+                <h3><a href="app-development.html">App Development</a></h3>
+                <p>Cross-platform and native applications designed for performance and user engagement</p>
+            </div>
+            <div class="service-card">
+                <h3><a href="devops-services.html">DevOps Services</a></h3>
+                <p>CI/CD pipelines, cloud infrastructure, and deployment automation</p>
+            </div>
+            <div class="service-card">
+                <h3><a href="ux-design.html">UX Design</a></h3>
+                <p>Human-centered design strategies to improve product usability and experience</p>
+            </div>
+            <div class="service-card">
+                <h3><a href="creative-services.html">Creative Services</a></h3>
+                <p>Poster designs, video editing, promotional materials for brand awareness</p>
+            </div>
+            <div class="service-card">
+                <h3><a href="promotional-assistance.html">Promotional Assistance</a></h3>
+                <p>Social media marketing support, ad strategy consultation</p>
+            </div>
+            <div class="service-card">
+                <h3><a href="inventory-management.html">Inventory Management</a></h3>
+                <p>Custom tools to streamline business operations and track stock effectively</p>
+            </div>
+            <div class="service-card">
+                <h3><a href="wearables.html">Wearables</a></h3>
+                <p>Custom hoodies, shirts to upscale or promote your business</p>
+            </div>
+        </div>
+    </section>
+
+    <!--
+    Target Audience Section
+
+    Identifies the primary customer segments that the company serves.
+    This helps visitors understand if the services are relevant to them.
+
+    Note for backend developers:
+    - This list can be dynamically generated from a CMS
+    - Consider adding testimonials from each audience segment
+    - This information can be used for personalization based on visitor data
+    -->
+    <section>
+        <h2>Our Target Audience</h2>
+        <ul>
+            <li>Startups and early-stage companies</li>
+            <li>Local and small businesses</li>
+            <li>E-commerce platforms</li>
+            <li>Service-based businesses</li>
+            <li>Agencies seeking outsourcing support</li>
+        </ul>
+    </section>
+
+    <!--
+    Competitive Advantage Section
+
+    Highlights the unique selling propositions and differentiators
+    that set the company apart from competitors.
+
+    Note for backend developers:
+    - These points should be stored in a structured format in the CMS
+    - Consider adding icons or visual elements to each point
+    - This content should be regularly reviewed and updated based on market analysis
+    -->
+    <section>
+        <h2>Our Competitive Advantage</h2>
+        <ul>
+            <li>End-to-end solutions from design to deployment</li>
+            <li>Personalized client approach with transparent communication</li>
+            <li>Emphasis on scalability, performance, and design</li>
+            <li>Agile and collaborative workflows</li>
+        </ul>
+    </section>
+
+    <!--
+    Future Outlook Section
+
+    Describes the company's vision for future growth and development.
+    This demonstrates forward thinking and innovation to potential clients.
+
+    Note for backend developers:
+    - This content should be easily updatable through the CMS
+    - Consider adding a timeline or roadmap visualization
+    - This section could be expanded with specific upcoming features or services
+    -->
+    <section>
+        <h2>Future Outlook</h2>
+        <p>Lazreus Tech plans to expand its offerings to include AI-based tools, analytics dashboards, and SaaS products aimed at operational efficiency and customer engagement.</p>
+    </section>
+
+    <!--
+    Footer Section
+
+    A responsive 3-column footer with branding, services, and contact information.
+    Includes a separate copyright section at the bottom.
+
+    Note for backend developers:
+    - All content should be stored in a central configuration for easy updates
+    - The services list should be dynamically generated from the same data source as the navigation
+    - Contact information should be consistent across the site
+    - The copyright year should be dynamically generated
+    - Consider adding schema.org markup for the organization and contact information
+    -->
+    <footer id="contact" class="footer">
+        <div class="footer-content">
+            <!--
+            Branding Section
+
+            Contains company name and tagline.
+
+            Note for backend developers:
+            - This content should be stored in a central configuration
+            - Consider adding social media links here
+            -->
+            <div class="footer-branding">
+                <h3>Lazreus Tech</h3>
+                <p>Explore with us to access world-class technology solutions that will transform your business and software requirements.</p>
+            </div>
+
+            <!--
+            Services Section
+
+            Contains links to all service pages.
+
+            Note for backend developers:
+            - This list should be dynamically generated from the services database
+            - The active service should be highlighted if on a service page
+            - Track clicks on these links for conversion analytics
+            -->
+            <div class="footer-services">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="website-development.html">Website Development</a></li>
+                    <li><a href="app-development.html">App Development</a></li>
+                    <li><a href="devops-services.html">DevOps Services</a></li>
+                    <li><a href="ux-design.html">UX Design</a></li>
+                    <li><a href="creative-services.html">Creative Services</a></li>
+                    <li><a href="promotional-assistance.html">Promotional Assistance</a></li>
+                    <li><a href="inventory-management.html">Inventory Management</a></li>
+                    <li><a href="wearables.html">Wearables</a></li>
+                </ul>
+            </div>
+
+            <!--
+            Contact Section
+
+            Contains contact information with icons.
+
+            Note for backend developers:
+            - This information should be stored in a central configuration
+            - Phone numbers should have click-to-call functionality
+            - Email addresses should be protected from spam harvesters
+            - Consider adding a contact form that submits to your backend API
+            -->
+            <div class="footer-contact">
+                <h4>Contact</h4>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            <a href="tel:+919863717100">+91 9863717100</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-text">
+                            <a href="mailto:info@lazarusinfotech.com">info@lazarusinfotech.com</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            Bangalore
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--
+        Copyright Section
+
+        Contains copyright notice and legal links.
+
+        Note for backend developers:
+        - The year should be dynamically generated
+        - Legal pages should be properly linked
+        - Consider adding a language selector here for multilingual sites
+        -->
+        <div class="footer-copyright">
+            <p>Copyright &copy;2023 Lazarus Info Tech</p>
+            <div class="footer-links">
+                <a href="terms.html">Terms & Conditions</a>
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+    </div><!-- End of content-wrapper -->
+</body>
+</html>

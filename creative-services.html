@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Services - Lazreus Tech</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+    <!--
+        Font Awesome for Icons
+        Used for social media icons, contact information icons, and UI elements.
+
+        Note for backend developers:
+        - Consider downloading and hosting these files locally for better performance
+        - Only the solid style is being loaded for better performance
+        - For production, consider using a package manager to include only needed icons
+    -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <style>
+        /**
+         * Service Page Specific Styles
+         *
+         * These styles are specific to the service detail pages and override
+         * or extend the global styles from style.css.
+         *
+         * @important For backend developers: If implementing a CMS,
+         * consider moving these styles to a separate CSS file that's
+         * dynamically included for service pages.
+         */
+
+        .service-hero {
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            background: linear-gradient(to bottom, var(--space-primary), var(--space-secondary) 70%, var(--space-dark));
+            color: #fff;
+        }
+
+        .service-hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #4e8cff, #ff6f61); /* Changed to a more vibrant gradient */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+            font-weight: bold; /* Added bold font weight */
+            text-align: center; /* Center-aligned */
+            text-decoration: underline; /* Added underline */
+            text-underline-offset: 10px; /* Space between text and underline */
+            text-decoration-color: rgba(255, 255, 255, 0.5); /* Underline color */
+            text-decoration-thickness: 2px; /* Underline thickness */
+        }
+
+        .description-section {
+            background: linear-gradient(135deg, rgba(11, 11, 43, 0.85), rgba(27, 39, 53, 0.9));
+            padding: 4rem 2rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            margin: 2rem auto;
+            max-width: 1200px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            font-family: var(--font-body);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .description-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 40%, rgba(138, 43, 226, 0.15), transparent 30%),
+                        radial-gradient(circle at 70% 60%, rgba(0, 191, 255, 0.1), transparent 30%);
+            z-index: -1;
+        }
+
+        .description-section h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.2rem, 4vw, 3rem);
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #4e8cff, #ff6f61, #a64dff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 15px rgba(78, 140, 255, 0.7);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        .description-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #4e8cff, #ff6f61, #a64dff);
+            border-radius: 3px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .description-section p {
+            font-size: clamp(1.05rem, 2vw, 1.2rem);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.2px;
+        }
+
+        .key-features {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border-left: 3px solid rgba(78, 140, 255, 0.7);
+        }
+
+        .key-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .key-features li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 2rem;
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            letter-spacing: 0.2px;
+        }
+
+        .key-features li::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: rgba(78, 140, 255, 0.9);
+            font-weight: bold;
+        }
+
+        .cta {
+            margin-top: 2.5rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cta p {
+            font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        .cta a {
+            color: #4e8cff;
+            font-weight: bold;
+            text-decoration: underline;
+            transition: all 0.3s ease;
+        }
+
+        .cta a:hover {
+            color: #ff6f61;
+            text-shadow: 0 0 8px rgba(255, 111, 97, 0.5);
+        }
+
+        .top-right-graphic {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            opacity: 0.1;
+            /* Background image will be added in each service page */
+        }
+
+        .bottom-left-graphic {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 150px;
+            height: 150px;
+            opacity: 0.1;
+            /* Background image will be added in each service page */
+        }
+    </style>
+</head>
+<body>
+    <!--
+    Background Animation
+
+    This section creates the space-themed animated background with stars and nebulas.
+    The animation is handled by CSS and enhanced with JavaScript for parallax effects.
+
+    Note for backend developers: This is purely decorative and doesn't require
+    backend integration or dynamic content.
+    -->
+    <div class="space-background">
+        <div class="stars"></div>
+        <div class="stars stars-2"></div>
+        <div class="stars stars-3"></div>
+        <div class="nebula nebula-1"></div>
+        <div class="nebula nebula-2"></div>
+        <div class="nebula nebula-3"></div>
+    </div>
+    <!-- End of Background Animation -->
+
+    <!--
+    Content Wrapper
+
+    This div wraps all page content and ensures it appears above the animated background.
+    All dynamic content should be placed within this wrapper.
+    -->
+    <div class="content-wrapper">
+
+    <!--
+    Header Section with Navigation
+
+    The main navigation bar appears on all pages and includes:
+    - Logo/brand
+    - Main navigation links
+    - Services dropdown menu
+    - CTA button
+
+    Note for backend developers:
+    - The active class should be dynamically applied based on current page
+    - The dropdown menu items can be generated from a database/CMS
+    - The CTA button can be linked to a form submission handler
+    -->
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <div class="navbar-left">
+                <div class="navbar-brand">
+                    <a href="index.html" aria-label="Lazreus Tech Home">
+                        <img src="photo.jpg" alt="Lazreus Tech Logo" class="navbar-logo">
+                        <span>Lazreus Tech</span>
+                    </a>
+                </div>
+            </div>
+            <button class="navbar-toggler" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav" role="menubar">
+                    <li class="nav-item" role="none"><a class="nav-link" href="index.html" role="menuitem">Home</a></li>
+                    <li class="nav-item" role="none"><a class="nav-link" href="index.html#about" role="menuitem">About</a></li>
+                    <li class="nav-item dropdown" role="none">
+                        <a class="nav-link dropdown-toggle active" href="index.html#services" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-current="page">Services</a>
+                        <div class="dropdown-menu" aria-labelledby="servicesDropdown">
+                            <a class="dropdown-item" href="website-development.html">Website Development</a>
+                            <a class="dropdown-item" href="app-development.html">App Development</a>
+                            <a class="dropdown-item" href="devops-services.html">DevOps Services</a>
+                            <a class="dropdown-item" href="ux-design.html">UX Design</a>
+                            <a class="dropdown-item active" href="creative-services.html">Creative Services</a>
+                            <a class="dropdown-item" href="promotional-assistance.html">Promotional Assistance</a>
+                            <a class="dropdown-item" href="inventory-management.html">Inventory Management</a>
+                            <a class="dropdown-item" href="wearables.html">Wearables</a>
+                        </div>
+                    </li>
+                    <li class="nav-item" role="none"><a class="nav-link" href="index.html#contact" role="menuitem">Contact</a></li>
+                </ul>
+                <div class="navbar-cta">
+                    <button class="btn-consultation" aria-label="Get a Free Consultation">Get a Free Consultation</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!--
+    Service Hero Section
+
+    This section displays the main title of the service page.
+    It uses a large, gradient-styled heading for visual impact.
+
+    Note for backend developers: The title should be dynamically
+    populated from the service data in the CMS/database.
+    -->
+    <section class="service-hero">
+        <h1>Creative Services</h1>
+    </section>
+
+    <!--
+    Service Description Section
+
+    This section contains the detailed description of the service:
+    - Main headline (h2)
+    - Service description (p)
+    - Key features list (ul/li)
+    - Call-to-action (CTA)
+    - Decorative graphics
+
+    Note for backend developers:
+    - All content should be dynamically populated from the service data
+    - The SVG graphics can be stored as base64 strings in the database
+    - The CTA link should be configurable in the admin panel
+    -->
+    <section class="description-section">
+        <div class="top-right-graphic" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE4IDEzVjIwSDRWNkg5LjAyQzkuMDcgNS4yOSA5LjI0IDQuNjIgOS41IDRINEMyLjkgNCAyIDQuOSAyIDZWMjBDMiAyMS4xIDIuOSAyMiA0IDIySDE4QzE5LjEgMjIgMjAgMjEuMSAyMCAyMFYxNUwxOCAxM1pNMTkuMyA4Ljg5QzE5LjY5IDguMzMgMTkuNjkgNy41OCAxOS4zIDcuMDJMMTcuODkgNC44M0MxNy41IDQuMjcgMTYuNzcgNC4wNyAxNi4yIDQuNDZMMTEgOC4wMlYxNUgxNy45N0wxOS4zIDguODlaTTEyIDEyLjVWOS4xN0wxNS4zMSA2Ljk3TDE2LjIxIDguNDhMMTMuNSAxMC41TDEzLjk3IDEyLjVIMTJaIiBmaWxsPSIjMDAwIi8+PC9zdmc+'); background-repeat: no-repeat; background-position: center; background-size: contain;"></div>
+
+        <!--
+        Service Description Content
+
+        This is the main content area for the service description.
+        It includes a headline, descriptive text with highlighted keywords,
+        and a list of key features.
+
+        Note for backend developers:
+        - The content should be stored in a structured format in the database
+        - Strong tags can be preserved in the database or added via a rich text editor
+        - The key features should be stored as an array/list in the database
+        -->
+        <h2>Make Your Brand Impossible to Ignore</h2>
+
+        <p>From viral social media graphics to cinematic promo videos, we turn your brand story into visual gold. Our designs are bold, on-trend, and tailored to your audience's heartbeat. Need merch? We'll make your logo look as good on a hoodie as it does on your homepage.</p>
+
+        <!--
+        Key Features List
+
+        Highlights the main features of the service in an easy-to-scan format.
+
+        Note for backend developers: This list should be dynamically generated
+        from an array of features in the service data.
+        -->
+        <div class="key-features">
+            <ul>
+                <li>Social Media Kits</li>
+                <li>Animated Explainer Videos</li>
+                <li>Print-Ready Design Files</li>
+            </ul>
+        </div>
+
+        <!--
+        Call to Action
+
+        Encourages the user to take the next step.
+
+        Note for backend developers:
+        - The CTA text and link should be configurable in the admin panel
+        - This could be connected to a form submission or booking system API
+        - Consider adding event tracking for analytics
+        -->
+        <div class="cta">
+            <p>Ready to elevate your business? <a href="index.html#contact">Let's talk</a>.</p>
+        </div>
+
+        <div class="bottom-left-graphic" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNODUgMTVIMTVjLTIuOCAwLTUgMi4yLTUgNXY2MGMwIDIuOCAyLjIgNSA1IDVoNzBjMi44IDAgNS0yLjIgNS01VjIwYzAtMi44LTIuMi01LTUtNXptLTIwIDIwYzUuNSAwIDEwIDQuNSAxMCAxMHMtNC41IDEwLTEwIDEwLTEwLTQuNS0xMC0xMCA0LjUtMTAgMTAtMTB6bTIwIDQwSDUwbDEwLTEwIDUgNSAyMC0yMHYyNXoiIGZpbGw9IiMwMDAiLz48L3N2Zz4='); background-repeat: no-repeat; background-position: center; background-size: contain;"></div>
+    </section>
+
+    <!--
+    Footer Section
+
+    A responsive 3-column footer with branding, services, and contact information.
+    Includes a separate copyright section at the bottom.
+
+    Note for backend developers:
+    - All content should be stored in a central configuration for easy updates
+    - The services list should be dynamically generated from the same data source as the navigation
+    - Contact information should be consistent across the site
+    - The copyright year should be dynamically generated
+    - Consider adding schema.org markup for the organization and contact information
+    -->
+    <footer id="contact" class="footer">
+        <div class="footer-content">
+            <!--
+            Branding Section
+
+            Contains company name and tagline.
+
+            Note for backend developers:
+            - This content should be stored in a central configuration
+            - Consider adding social media links here
+            -->
+            <div class="footer-branding">
+                <h3>Lazreus Tech</h3>
+                <p>Explore with us to access world-class technology solutions that will transform your business and software requirements.</p>
+            </div>
+
+            <!--
+            Services Section
+
+            Contains links to all service pages.
+
+            Note for backend developers:
+            - This list should be dynamically generated from the services database
+            - The active service should be highlighted if on a service page
+            - Track clicks on these links for conversion analytics
+            -->
+            <div class="footer-services">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="website-development.html">Website Development</a></li>
+                    <li><a href="app-development.html">App Development</a></li>
+                    <li><a href="devops-services.html">DevOps Services</a></li>
+                    <li><a href="ux-design.html">UX Design</a></li>
+                    <li><a href="creative-services.html">Creative Services</a></li>
+                    <li><a href="promotional-assistance.html">Promotional Assistance</a></li>
+                    <li><a href="inventory-management.html">Inventory Management</a></li>
+                    <li><a href="wearables.html">Wearables</a></li>
+                </ul>
+            </div>
+
+            <!--
+            Contact Section
+
+            Contains contact information with icons.
+
+            Note for backend developers:
+            - This information should be stored in a central configuration
+            - Phone numbers should have click-to-call functionality
+            - Email addresses should be protected from spam harvesters
+            - Consider adding a contact form that submits to your backend API
+            -->
+            <div class="footer-contact">
+                <h4>Contact</h4>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            <a href="tel:+919863717100">+91 9863717100</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-text">
+                            <a href="mailto:info@lazarusinfotech.com">info@lazarusinfotech.com</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            Bangalore
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--
+        Copyright Section
+
+        Contains copyright notice and legal links.
+
+        Note for backend developers:
+        - The year should be dynamically generated
+        - Legal pages should be properly linked
+        - Consider adding a language selector here for multilingual sites
+        -->
+        <div class="footer-copyright">
+            <p>Copyright &copy;2023 Lazarus Info Tech</p>
+            <div class="footer-links">
+                <a href="terms.html">Terms & Conditions</a>
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+    </div><!-- End of content-wrapper -->
+</body>
+</html>
