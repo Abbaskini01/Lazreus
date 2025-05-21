@@ -657,6 +657,7 @@ body.page-loaded .content-wrapper {
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -664,31 +665,33 @@ body.page-loaded .content-wrapper {
     padding: var(--bs-navbar-padding-y) var(--bs-navbar-padding-x);
     width: 100%;
     z-index: 1000;
-    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smoother transition */
     max-width: 100%;
     margin: 0 auto;
     background-color: rgba(11, 11, 43, 0.85);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     height: 70px; /* Default expanded height */
-    /* Ensure the navbar stays fixed at all times */
-    position: fixed !important;
+    will-change: height, padding, background-color; /* Optimize for animations */
 }
 
-/* Navbar states */
+/* Navbar states - always expanded */
 .navbar.navbar-expanded {
     height: 70px;
     padding-top: 15px;
     padding-bottom: 15px;
     background-color: rgba(11, 11, 43, 0.85);
+    transform: translateY(0);
     transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Keeping this for backward compatibility, but it won't be used */
 .navbar.navbar-collapsed {
-    height: 50px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    background-color: rgba(11, 11, 43, 0.95);
+    height: 70px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: rgba(11, 11, 43, 0.85);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
@@ -1104,14 +1107,16 @@ body.page-loaded .content-wrapper {
         height: 60px;
         padding-top: 10px;
         padding-bottom: 10px;
-        transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     }
 
+    /* Keeping this for backward compatibility, but it won't be used */
     .navbar.navbar-collapsed {
-        height: 45px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+        height: 60px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     }
 
     .navbar-toggler {
@@ -1278,8 +1283,9 @@ body.page-loaded .content-wrapper {
  * High z-index ensures it stays above other content.
  */
 header {
-    position: static;
+    position: relative;
     width: 100%;
+    padding: 1rem 0;
     z-index: 10;
 }
 
@@ -1305,7 +1311,6 @@ header {
 @media (max-width: 991.98px) {
     .content-wrapper {
         padding-top: 60px; /* Same as mobile navbar height */
-        transition: padding-top 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
 }
 

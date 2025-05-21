@@ -1,17 +1,11 @@
 /**
- * Main JavaScript file for Lazreus Tech website
+ * Main JS for Lazreus Tech website
  *
- * This file handles:
- * 1. Navbar functionality (toggle, dropdown, responsive behavior)
- * 2. Smart navbar behavior (expand/collapse on scroll)
- * 3. Background animation effects
- * 4. Smooth scrolling for anchor links
- * 5. Section reveal animations
- *
- * Note for backend developers:
- * - This file is primarily for frontend UI interactions
- * - Any API calls or data fetching should be added in the appropriate sections below
- * - Form submissions and AJAX requests should be implemented with proper error handling
+ * Features:
+ * - Navbar: toggle, dropdown, scroll-based resize
+ * - Animations: background parallax, section reveals
+ * - Navigation: smooth scrolling, active link highlighting
+ * - UI: page loader, custom cursor, scroll-to-top button
  */
 
 // Execute all code when DOM is fully loaded to ensure all elements are available
@@ -20,40 +14,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const navbarCollapse = document.querySelector('.navbar-collapse');
     const navbar = document.querySelector('.navbar');
 
-    /**
-     * Background animation elements
-     * These elements create the space-themed parallax effect when scrolling
-     */
+    // Background animation elements for parallax effect
     const stars = document.querySelectorAll('.stars');
     const nebulas = document.querySelectorAll('.nebula');
 
-    /**
-     * Smart navbar scroll behavior variables
-     * These control how the navbar responds to scrolling actions
-     */
-    let lastScrollTop = 0;                // Tracks the previous scroll position
-    const scrollThreshold = 10;           // Minimum scroll amount to trigger navbar change
-    let isScrollingNavbar = false;        // Flag to throttle navbar scroll events for performance
+    // Navbar scroll behavior variables
+    let isScrollingNavbar = false;        // Throttle flag for performance
 
-    // Initialize navbar with expanded state by default
+    // Set up navbar as fixed and expanded by default
     navbar.classList.add('navbar-expanded');
+    navbar.style.position = 'fixed';
+    navbar.style.top = '0';
+    navbar.style.left = '0';
+    navbar.style.right = '0';
+    navbar.style.zIndex = '1000';
 
-    /**
-     * Navbar functionality
-     *
-     * Handles all interactive elements of the navigation bar:
-     * - Mobile menu toggle
-     * - Dropdown menus
-     * - Responsive behavior
-     * - Accessibility attributes
-     */
+    // Navbar interactive elements setup
     if (navbarToggler && navbarCollapse) {
-        /**
-         * Mobile menu toggle handler
-         *
-         * Shows/hides the mobile navigation menu when the hamburger icon is clicked
-         * Also updates ARIA attributes for accessibility compliance
-         */
+        // Mobile menu toggle - show/hide menu on hamburger click
         navbarToggler.addEventListener('click', function(e) {
             e.preventDefault();
             navbarCollapse.classList.toggle('show');
@@ -63,15 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
             navbarToggler.setAttribute('aria-expanded', expanded);
         });
 
-        /**
-         * Dropdown menu handling
-         *
-         * Controls the behavior of dropdown menus in the navigation
-         * Different behavior on mobile vs desktop
-         */
+        // Dropdown menu handling - different behavior on mobile vs desktop
         const dropdownItems = document.querySelectorAll('.nav-item.dropdown');
-
-        // Mobile-specific dropdown toggle behavior
         dropdownItems.forEach(dropdown => {
             const dropdownLink = dropdown.querySelector('.nav-link');
 
@@ -93,12 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        /**
-         * Auto-close menu when regular nav links are clicked
-         *
-         * Improves UX by automatically closing the mobile menu
-         * when a user clicks on a navigation link
-         */
+        // Auto-close menu when regular nav links are clicked
         const navLinks = document.querySelectorAll('.nav-link:not(.dropdown-toggle)');
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
@@ -113,12 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        /**
-         * Auto-close menu when dropdown items are clicked
-         *
-         * Similar to nav links, closes the mobile menu when
-         * a user selects an item from a dropdown menu
-         */
+        // Auto-close menu when dropdown items are clicked
         const dropdownMenuItems = document.querySelectorAll('.dropdown-item');
         dropdownMenuItems.forEach(item => {
             item.addEventListener('click', function() {
@@ -133,12 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        /**
-         * Close menu when clicking outside the navbar
-         *
-         * Improves UX by closing the menu when a user
-         * clicks anywhere else on the page
-         */
+        // Close menu when clicking outside the navbar
         document.addEventListener('click', function(e) {
             if (!navbar.contains(e.target) && navbarCollapse.classList.contains('show')) {
                 navbarCollapse.classList.remove('show');
@@ -146,12 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        /**
-         * Handle window resize events
-         *
-         * Ensures proper menu state when switching between
-         * mobile and desktop viewport sizes
-         */
+        // Handle window resize - close mobile menu when switching to desktop
         let resizeTimer;
         window.addEventListener('resize', function() {
             // Debounce the resize event for better performance
@@ -166,81 +117,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    /**
-     * Smart Navbar Scroll Behavior
-     *
-     * Creates a dynamic navbar that responds to scroll direction:
-     * - Expands when scrolling up (showing full navbar)
-     * - Collapses when scrolling down (showing minimal navbar)
-     * - Always expands at the top of the page
-     *
-     * This improves UX by providing more screen space when reading content
-     * while keeping navigation accessible when needed.
-     *
-     * Note: The navbar remains fixed at all times, only its height changes.
-     */
+    // Smart Navbar Scroll Behavior
+    // Always visible while scrolling throughout the webpage
     function handleNavbarScroll() {
-        // Get current scroll position using cross-browser compatible approach
-        const currentScrollTop = window.scrollY || document.documentElement.scrollTop;
+        // Ensure navbar is fixed at the top
+        navbar.style.position = 'fixed';
+        navbar.style.top = '0';
+        navbar.style.left = '0';
+        navbar.style.right = '0';
 
-        // Special case: Always show expanded navbar at the top of the page
-        if (currentScrollTop <= 10) {
-            navbar.classList.remove('navbar-collapsed');
-            navbar.classList.add('navbar-expanded');
-
-            // Adjust content wrapper padding for larger navbar at the top
-            if (window.innerWidth > 991) {
-                document.querySelector('.content-wrapper').style.paddingTop = '70px';
-            } else {
-                document.querySelector('.content-wrapper').style.paddingTop = '60px';
-            }
-
-            lastScrollTop = currentScrollTop;
-            return;
-        }
-
-        // Only trigger navbar state change if we've scrolled enough
-        // This prevents rapid toggling when scroll amount is minimal
-        if (Math.abs(lastScrollTop - currentScrollTop) <= scrollThreshold) {
-            return;
-        }
-
-        // Determine scroll direction and update navbar accordingly
-        if (currentScrollTop > lastScrollTop) {
-            // Scrolling DOWN - collapse navbar to maximize content space
-            navbar.classList.remove('navbar-expanded');
-            navbar.classList.add('navbar-collapsed');
-
-            // Adjust content wrapper padding for smaller navbar
-            if (window.innerWidth > 991) {
-                document.querySelector('.content-wrapper').style.paddingTop = '50px';
-            } else {
-                document.querySelector('.content-wrapper').style.paddingTop = '45px';
-            }
-        } else {
-            // Scrolling UP - expand navbar to make navigation accessible
-            navbar.classList.remove('navbar-collapsed');
-            navbar.classList.add('navbar-expanded');
-
-            // Adjust content wrapper padding for larger navbar
-            if (window.innerWidth > 991) {
-                document.querySelector('.content-wrapper').style.paddingTop = '70px';
-            } else {
-                document.querySelector('.content-wrapper').style.paddingTop = '60px';
-            }
-        }
-
-        // Store current position for next comparison
-        lastScrollTop = currentScrollTop;
+        // Always keep navbar expanded and visible
+        navbar.classList.remove('navbar-collapsed');
+        navbar.classList.add('navbar-expanded');
     }
 
-    /**
-     * Performance-optimized scroll event handler
-     *
-     * Uses requestAnimationFrame to throttle scroll events
-     * This significantly improves performance by limiting
-     * how often the scroll handler executes
-     */
+    // Performance-optimized scroll event handler using requestAnimationFrame
     window.addEventListener('scroll', function() {
         if (!isScrollingNavbar) {
             window.requestAnimationFrame(function() {
@@ -249,18 +140,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             isScrollingNavbar = true;
         }
-    }, { passive: true });
+    }, { passive: true }); // Using passive event listener for better performance
 
-    /**
-     * Active Navigation Highlighting
-     *
-     * Automatically highlights the current section in the navigation menu
-     * as the user scrolls through the page. This provides visual feedback
-     * about the user's current position on the page.
-     *
-     * @integration-point Backend developers can extend this to work with
-     * dynamically loaded sections or content from APIs
-     */
+    // Active Navigation Highlighting - shows current section in menu
     const sections = document.querySelectorAll('section[id]');
 
     function highlightNavOnScroll() {
@@ -289,19 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    /**
-     * Enhanced Parallax Background Animation
-     *
-     * Creates a depth effect by moving background elements at different speeds
-     * as the user scrolls. This creates an immersive space-themed experience.
-     *
-     * Improvements:
-     * - Uses requestAnimationFrame for smoother animation
-     * - Implements hardware acceleration with transform3d
-     * - Adds subtle rotation effects for more dynamic movement
-     * - Optimizes performance with throttling and efficient transforms
-     * - Scales animation intensity based on device capabilities
-     */
+    // Parallax Background Animation - creates depth effect while scrolling
 
     // Track last animation frame request to avoid redundant animations
     let animationFrameId = null;
@@ -373,18 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    /**
-     * Enhanced Smooth Scrolling for Anchor Links
-     *
-     * Provides smooth scrolling animation when clicking on any link
-     * that points to an anchor/section on the same page.
-     *
-     * Features:
-     * - Custom easing function for more natural movement
-     * - Adjustable speed based on scroll distance
-     * - Responsive navbar offset calculation
-     * - Prevents multiple scroll animations from running simultaneously
-     */
+    // Smooth Scrolling for Anchor Links - animated page navigation
     let isScrolling = false;
     const scrollDuration = 1000; // Base duration in milliseconds
 
@@ -430,20 +289,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Timestamp of when the animation started
             let startTime = null;
 
-            /**
-             * Easing function for smoother acceleration/deceleration
-             * Uses easeInOutQuart for a natural feel
-             */
+            // Easing function for natural-feeling animation
             function easeInOutQuart(t) {
                 return t < 0.5
                     ? 8 * t * t * t * t
                     : 1 - Math.pow(-2 * t + 2, 4) / 2;
             }
 
-            /**
-             * Scroll animation frame
-             * Uses requestAnimationFrame for smoother performance
-             */
+            // Scroll animation frame using requestAnimationFrame
             function scrollAnimation(currentTime) {
                 if (startTime === null) startTime = currentTime;
 
@@ -474,31 +327,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    /**
-     * Enhanced Section Reveal Animation
-     *
-     * Adds sophisticated reveal animations to sections as they
-     * enter the viewport while scrolling. This creates a more
-     * engaging and dynamic page experience.
-     *
-     * Improvements:
-     * - Staggered animations for child elements
-     * - Different animation styles for different section types
-     * - Smoother transitions with cubic-bezier easing
-     * - Progressive loading effect for list items
-     * - Optimized for performance with IntersectionObserver
-     *
-     * @integration-point Backend developers can use this pattern
-     * for animating dynamically loaded content from APIs
-     */
+    // Section Reveal Animation - fade in sections as they enter viewport
     const allSections = document.querySelectorAll('section');
 
-    /**
-     * Create and inject enhanced CSS animations
-     *
-     * This approach allows us to keep the animation logic together
-     * rather than splitting between JS and CSS files
-     */
+    // Create and inject CSS animations directly in JS
     const style = document.createElement('style');
     style.textContent = `
         /* Base section animation - initial state */
@@ -600,10 +432,7 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
 
-    /**
-     * Use IntersectionObserver for more efficient section reveal
-     * This is more performant than checking positions on every scroll
-     */
+    // Use IntersectionObserver to efficiently detect when sections enter viewport
     const sectionObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             // Only reveal section when it enters the viewport
@@ -627,10 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
         sectionObserver.observe(section);
     });
 
-    /**
-     * Legacy fallback for browsers that don't support IntersectionObserver
-     * This ensures the animation works on all browsers
-     */
+    // Fallback for browsers without IntersectionObserver support
     function revealSections() {
         // Skip if IntersectionObserver is supported
         if ('IntersectionObserver' in window) return;
@@ -649,18 +475,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    /**
-     * Optimized Scroll Event Handler
-     *
-     * Centralized scroll event handler that triggers all scroll-based
-     * functions with performance optimizations:
-     * - Uses requestAnimationFrame for smoother animations
-     * - Throttles execution to prevent performance issues
-     * - Prioritizes critical animations
-     * - Debounces expensive operations
-     *
-     * @performance Using these techniques significantly improves page performance
-     */
+    // Main scroll event handler - optimized for performance
 
     // Throttle variables to prevent too many scroll events
     let scrollTimeout;
@@ -705,12 +520,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, { passive: true }); // Use passive listener for better scroll performance
 
-    /**
-     * Resize Handler
-     *
-     * Handle window resize events with debouncing
-     * This ensures animations adapt to new viewport dimensions
-     */
+    // Resize Handler - updates animations when window size changes
     let resizeTimeout;
     window.addEventListener('resize', function() {
         // Clear previous timeout
@@ -728,20 +538,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 150);
     }, { passive: true });
 
-    /**
-     * Initialize Page State
-     *
-     * Call all functions once on page load to set up initial state
-     * This ensures everything is properly set up before user interaction
-     */
-    /**
-     * Page Loading Animation and Enhanced UI Effects
-     *
-     * Creates a smooth fade-in effect when the page loads and adds
-     * interactive UI enhancements like custom cursor effects.
-     *
-     * This improves perceived performance and provides a more polished experience.
-     */
+    // Page Loading Animation and UI Effects
     document.addEventListener('DOMContentLoaded', () => {
         // Create and add page loader overlay
         const loader = document.createElement('div');
@@ -761,7 +558,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Variables for cursor effect
         let cursorVisible = false;
-        let cursorEnlarged = false;
 
         // Mouse position with smoothing
         let mouseX = 0;
@@ -796,12 +592,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const interactiveElements = document.querySelectorAll('a, button, .btn, .nav-link, .service-card, .footer-links a');
             interactiveElements.forEach(el => {
                 el.addEventListener('mouseover', () => {
-                    cursorEnlarged = true;
                     cursorEffect.classList.add('hover');
                 });
 
                 el.addEventListener('mouseout', () => {
-                    cursorEnlarged = false;
                     cursorEffect.classList.remove('hover');
                 });
             });
@@ -872,18 +666,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     });
 
-    /**
-     * Scroll-to-Top Button
-     *
-     * Adds a button that appears when the user scrolls down
-     * and allows them to smoothly scroll back to the top of the page.
-     *
-     * Features:
-     * - Appears/disappears based on scroll position
-     * - Smooth animation when scrolling to top
-     * - Accessible with keyboard navigation
-     * - Responsive design that works on all devices
-     */
+    // Scroll-to-Top Button - appears when scrolling down
     function addScrollToTopButton() {
         // Create the button element
         const scrollTopBtn = document.createElement('button');
@@ -948,48 +731,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize scroll-to-top button
     addScrollToTopButton();
 
-    /**
-     * Form Submission Handler
-     *
-     * @todo Implement form submission handler for contact forms
-     * This should include:
-     * - Form validation
-     * - AJAX submission to backend API
-     * - Success/error handling
-     * - User feedback (loading indicators, success/error messages)
-     *
-     * Example implementation:
-     *
-     * document.querySelector('#contact-form').addEventListener('submit', function(e) {
-     *     e.preventDefault();
-     *
-     *     // Validate form
-     *     const isValid = validateForm(this);
-     *     if (!isValid) return;
-     *
-     *     // Show loading indicator
-     *     showLoadingIndicator();
-     *
-     *     // Collect form data
-     *     const formData = new FormData(this);
-     *
-     *     // Submit to backend API
-     *     fetch('/api/contact', {
-     *         method: 'POST',
-     *         body: formData
-     *     })
-     *     .then(response => response.json())
-     *     .then(data => {
-     *         // Handle success
-     *         hideLoadingIndicator();
-     *         showSuccessMessage(data.message);
-     *         resetForm(this);
-     *     })
-     *     .catch(error => {
-     *         // Handle error
-     *         hideLoadingIndicator();
-     *         showErrorMessage(error.message);
-     *     });
-     * });
-     */
+    // TODO: Implement form submission handler for contact forms
 });
