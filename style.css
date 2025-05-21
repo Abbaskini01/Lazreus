@@ -66,8 +66,11 @@
  * - Optimized for performance
  */
 html {
-    scroll-behavior: smooth;
+    /* Using JS-based smooth scrolling instead for better performance and control */
+    scroll-behavior: auto;
     height: 100%;
+    /* Improve scrolling performance on Safari */
+    -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -273,22 +276,45 @@ body.page-loaded .content-wrapper {
     mix-blend-mode: screen;
 }
 
-/* Reduce animations for users who prefer reduced motion */
+/* Optimize for users who prefer reduced motion - better accessibility and performance */
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
     }
 
     body, body * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+        /* Disable all animations and transitions for better performance */
+        animation: none !important;
+        transition: none !important;
         scroll-behavior: auto !important;
     }
 
+    /* Hide purely decorative animated elements */
     .scroll-top-btn,
-    .cursor-effect {
+    .cursor-effect,
+    .shooting-star,
+    .nebula {
         display: none !important;
+    }
+
+    /* Simplify background for better performance */
+    .stars {
+        opacity: 0.5 !important;
+        transform: none !important;
+    }
+
+    /* Make all sections visible immediately without animations */
+    section {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    /* Ensure all content is immediately visible */
+    section h1, section h2, section p,
+    section button, section li,
+    section .service-card {
+        opacity: 1 !important;
+        transform: none !important;
     }
 }
 
@@ -654,25 +680,40 @@ body.page-loaded .content-wrapper {
     --bs-navbar-toggler-border-radius: 0.375rem;
     --bs-navbar-toggler-focus-width: 0.25rem;
     --bs-navbar-toggler-transition: box-shadow 0.15s ease-in-out;
+
+    /* Positioning */
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
+
+    /* Layout */
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
     padding: var(--bs-navbar-padding-y) var(--bs-navbar-padding-x);
     width: 100%;
-    z-index: 1000;
-    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smoother transition */
     max-width: 100%;
     margin: 0 auto;
-    background-color: rgba(11, 11, 43, 0.85);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     height: 70px; /* Default expanded height */
-    will-change: height, padding, background-color; /* Optimize for animations */
+    z-index: 1000;
+
+    /* Appearance */
+    background-color: rgba(11, 11, 43, 0.85);
+    /* Replaced backdrop-filter with a solid background for better performance */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    /* Performance optimizations */
+    /* Only animate properties that need to change - using cubic-bezier for smoother motion */
+    transition:
+        height 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        padding 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Limit will-change to only what's needed */
+    will-change: transform, height;
+    /* Use translate3d for hardware acceleration */
+    transform: translate3d(0, 0, 0);
 }
 
 /* Navbar states - always expanded */
@@ -680,10 +721,9 @@ body.page-loaded .content-wrapper {
     height: 70px;
     padding-top: 15px;
     padding-bottom: 15px;
-    background-color: rgba(11, 11, 43, 0.85);
     transform: translateY(0);
-    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    /* Lighter box-shadow for better performance */
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* Keeping this for backward compatibility, but it won't be used */
@@ -691,9 +731,7 @@ body.page-loaded .content-wrapper {
     height: 70px;
     padding-top: 15px;
     padding-bottom: 15px;
-    background-color: rgba(11, 11, 43, 0.85);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* Navbar Left Section */
@@ -738,14 +776,15 @@ body.page-loaded .content-wrapper {
     object-fit: cover;
     border-radius: 50%;
     border: 2px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+    /* Simplified transition - only animate what changes */
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    /* Reduced shadow intensity */
+    box-shadow: 0 0 5px rgba(138, 43, 226, 0.2);
 }
 
 .navbar-brand a:hover .navbar-logo {
     border-color: rgba(255, 255, 255, 0.5);
     transform: rotate(5deg);
-    box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
 }
 
 /* Logo size changes based on navbar state */
@@ -794,7 +833,8 @@ body.page-loaded .content-wrapper {
     align-items: center;
     justify-content: flex-end;
     padding-right: clamp(1rem, 5%, 2rem);
-    transition: all 0.3s ease;
+    /* Simplified transition - only animate what changes */
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 /* Navbar Nav */
@@ -832,25 +872,21 @@ body.page-loaded .content-wrapper {
     position: relative;
     white-space: nowrap;
 
-    /* Smoother transitions */
-    transition:
-        color 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
-        text-shadow 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    /* Simplified transitions - only animate what changes */
+    transition: color 0.25s ease;
 
-    /* Hardware acceleration */
-    transform: translateZ(0);
+    /* Hardware acceleration - using translate3d for better performance */
+    transform: translate3d(0, 0, 0);
 }
 
-/* Hover state with subtle glow */
+/* Hover state - removed text shadow for better performance */
 .nav-link:hover {
     color: var(--bs-navbar-hover-color);
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-/* Active state with stronger glow */
+/* Active state - simplified */
 .nav-link.active {
     color: var(--bs-navbar-active-color);
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
 }
 
 /* Animated gradient underline */
@@ -862,43 +898,33 @@ body.page-loaded .content-wrapper {
     left: 50%;
     right: 50%;
 
-    /* Gradient underline */
+    /* Simplified gradient underline */
     background: linear-gradient(
         to right,
         rgba(78, 140, 255, 0.8),
         rgba(255, 111, 97, 0.8)
     );
 
-    /* Subtle glow */
-    box-shadow: 0 0 8px rgba(78, 140, 255, 0.3);
+    /* Removed box-shadow for better performance */
 
     /* Rounded corners */
     border-radius: 2px;
 
-    /* Smoother animation */
-    transition:
-        left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1.4),
-        right 0.3s cubic-bezier(0.25, 0.1, 0.25, 1.4),
-        box-shadow 0.3s ease;
+    /* Optimized animation - only animate what changes */
+    transition: left 0.25s ease, right 0.25s ease;
 }
 
 /* Expand underline on hover */
 .nav-link:hover::after {
     left: 15%;
     right: 15%;
-    box-shadow: 0 0 12px rgba(78, 140, 255, 0.4);
 }
 
 /* Full underline for active state */
 .nav-link.active::after {
     left: 10%;
     right: 10%;
-    background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0.9),
-        rgba(255, 255, 255, 0.7)
-    );
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.8);
 }
 
 /* Dropdown Menu */
@@ -938,21 +964,28 @@ body.page-loaded .content-wrapper {
     padding: 0.5rem 0;
     margin: 0.5rem 0 0;
     background-color: rgba(11, 11, 43, 0.95);
-    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0.375rem;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Lighter box-shadow for better performance */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    /* Hardware acceleration */
+    transform: translateX(-50%) translateY(10px) translateZ(0);
+    will-change: opacity, transform;
+    /* Optimized transition with cubic-bezier for smoother motion */
+    transition:
+        opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-item.dropdown:hover .dropdown-menu,
 .nav-item.dropdown.show .dropdown-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(0) translateZ(0);
 }
 
 .dropdown-item {
@@ -968,7 +1001,8 @@ body.page-loaded .content-wrapper {
     white-space: nowrap;
     background-color: transparent;
     border: 0;
-    transition: all 0.2s ease;
+    /* Simplified transition - only animate what changes */
+    transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .dropdown-item:hover,
@@ -1028,12 +1062,11 @@ body.page-loaded .content-wrapper {
     /* Interactive properties */
     cursor: pointer;
 
-    /* Smooth transitions */
+    /* Simplified transitions for better performance */
     transition:
-        transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1.4),
-        box-shadow 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
-        background-color 0.4s ease,
-        text-shadow 0.4s ease;
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background-color 0.3s ease;
 
     /* Hardware acceleration */
     transform: translateZ(0);
@@ -1060,14 +1093,12 @@ body.page-loaded .content-wrapper {
     opacity: 0.7;
 }
 
-/* Enhanced hover state */
+/* Enhanced hover state - simplified for better performance */
 .btn-consultation:hover {
     background-color: rgba(11, 11, 43, 0.5);
     transform: translateY(-3px) translateZ(0);
-    box-shadow:
-        0 6px 15px rgba(0, 0, 0, 0.2),
-        0 0 20px rgba(78, 140, 255, 0.3);
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    /* Lighter box-shadow for better performance */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* Make gradient border more vibrant on hover */
@@ -1108,7 +1139,8 @@ body.page-loaded .content-wrapper {
         padding-top: 10px;
         padding-bottom: 10px;
         transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        /* Lighter box-shadow for better performance */
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     }
 
     /* Keeping this for backward compatibility, but it won't be used */
@@ -1116,13 +1148,14 @@ body.page-loaded .content-wrapper {
         height: 60px;
         padding-top: 10px;
         padding-bottom: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     }
 
     .navbar-toggler {
         display: block;
         margin-right: clamp(1rem, 5%, 2rem);
-        transition: all 0.3s ease;
+        /* Simplified transition */
+        transition: transform 0.25s ease;
     }
 
     .navbar.navbar-collapsed .navbar-toggler {
@@ -1140,17 +1173,23 @@ body.page-loaded .content-wrapper {
         left: 0;
         width: 100%;
         background-color: rgba(11, 11, 43, 0.95);
-        padding: 1rem;
+        padding: 0;
         flex-direction: column;
         align-items: center;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        /* Lighter box-shadow for better performance */
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
         max-height: 0;
         overflow: hidden;
         opacity: 0;
-        transition: all 0.4s ease-in-out;
+        /* Optimized transition with cubic-bezier for smoother motion */
+        transition:
+            opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Hardware acceleration */
+        transform: translateZ(0);
+        will-change: opacity, max-height;
     }
 
     .navbar-collapse.show {
@@ -1200,7 +1239,8 @@ body.page-loaded .content-wrapper {
         opacity: 0;
         max-height: 0;
         overflow: hidden;
-        transition: all 0.3s ease;
+        /* Simplified transition */
+        transition: opacity 0.25s ease, max-height 0.25s ease, visibility 0.25s ease;
     }
 
     .nav-item.dropdown.show .dropdown-menu {
@@ -1300,7 +1340,8 @@ header {
  */
 .content-wrapper {
     padding-top: 70px; /* Same as navbar height */
-    transition: padding-top 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    /* Simplified transition */
+    transition: padding-top 0.25s ease;
 }
 
 /**

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
     <title>Lazreus Tech - Digital Solutions for Small Businesses</title>
 
     <!--
@@ -45,6 +46,34 @@
         - Add meta tags for SEO and social sharing
     -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Performance optimization script - runs before page load -->
+    <script>
+        // Set up performance monitoring
+        window.performance.mark('page-start');
+
+        // Detect low-powered devices early
+        window.isLowPoweredDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        // Preload critical resources
+        if ('connection' in navigator) {
+            // Only preload on fast connections
+            if (navigator.connection.effectiveType === '4g') {
+                const preloadLinks = [
+                    { rel: 'preload', as: 'script', href: 'script.js' }
+                ];
+
+                preloadLinks.forEach(attrs => {
+                    const link = document.createElement('link');
+                    Object.keys(attrs).forEach(key => {
+                        link.setAttribute(key, attrs[key]);
+                    });
+                    document.head.appendChild(link);
+                });
+            }
+        }
+    </script>
+
     <script src="script.js" defer></script>
 </head>
 <body>

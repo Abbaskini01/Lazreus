@@ -8,8 +8,19 @@
  * - UI: page loader, custom cursor, scroll-to-top button
  */
 
+// Performance monitoring
+if (window.performance && window.performance.mark) {
+    // Mark the start of script execution
+    window.performance.mark('script-start');
+}
+
 // Execute all code when DOM is fully loaded to ensure all elements are available
 document.addEventListener('DOMContentLoaded', function() {
+    // Mark DOM content loaded for performance measurement
+    if (window.performance && window.performance.mark) {
+        window.performance.mark('dom-content-loaded');
+        window.performance.measure('script-to-dom-ready', 'script-start', 'dom-content-loaded');
+    }
     const navbarToggler = document.querySelector('.navbar-toggler');
     const navbarCollapse = document.querySelector('.navbar-collapse');
     const navbar = document.querySelector('.navbar');
@@ -21,13 +32,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Navbar scroll behavior variables
     let isScrollingNavbar = false;        // Throttle flag for performance
 
-    // Set up navbar as fixed and expanded by default
+    // Set up navbar as expanded by default
+    // The fixed position and other properties are now handled in CSS
     navbar.classList.add('navbar-expanded');
-    navbar.style.position = 'fixed';
-    navbar.style.top = '0';
-    navbar.style.left = '0';
-    navbar.style.right = '0';
-    navbar.style.zIndex = '1000';
 
     // Navbar interactive elements setup
     if (navbarToggler && navbarCollapse) {
@@ -120,27 +127,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Smart Navbar Scroll Behavior
     // Always visible while scrolling throughout the webpage
     function handleNavbarScroll() {
-        // Ensure navbar is fixed at the top
-        navbar.style.position = 'fixed';
-        navbar.style.top = '0';
-        navbar.style.left = '0';
-        navbar.style.right = '0';
-
         // Always keep navbar expanded and visible
         navbar.classList.remove('navbar-collapsed');
         navbar.classList.add('navbar-expanded');
     }
 
     // Performance-optimized scroll event handler using requestAnimationFrame
+    // Using passive event listener for better performance
     window.addEventListener('scroll', function() {
-        if (!isScrollingNavbar) {
-            window.requestAnimationFrame(function() {
-                handleNavbarScroll();
-                isScrollingNavbar = false;
-            });
-            isScrollingNavbar = true;
-        }
-    }, { passive: true }); // Using passive event listener for better performance
+        // Skip if we're already processing a scroll event
+        if (isScrollingNavbar) return;
+
+        isScrollingNavbar = true;
+
+        // Process the scroll event in the next animation frame for smoother performance
+        requestAnimationFrame(function() {
+            handleNavbarScroll();
+            isScrollingNavbar = false;
+        });
+    }, { passive: true });
 
     // Active Navigation Highlighting - shows current section in menu
     const sections = document.querySelectorAll('section[id]');
@@ -194,58 +199,85 @@ document.addEventListener('DOMContentLoaded', function() {
             const viewportHeight = window.innerHeight;
             const scrollProgress = scrollY / (document.body.scrollHeight - viewportHeight);
 
+            // Performance optimization: Only animate elements that are in or near the viewport
+            const viewportTop = scrollY;
+            const viewportBottom = scrollY + viewportHeight;
+
+            // Further reduce animation intensity for better performance
+            const optimizedIntensity = animationIntensity * 0.8;
+
             // Animate stars with parallax effect - each star layer moves at different speed
+            // Simplified calculations for better performance
             stars.forEach((star, index) => {
                 // Calculate depth factor - each star layer has increasing depth
                 const depth = 0.5 + (index * 0.25);
 
-                // Calculate subtle rotation based on scroll position
-                const rotation = scrollY * 0.005 * (index % 2 === 0 ? 1 : -1) * animationIntensity;
+                // Simplified rotation calculation
+                const rotation = Math.round(scrollY * 0.003 * (index % 2 === 0 ? 1 : -1) * optimizedIntensity);
 
                 // Apply vertical translation based on scroll position and depth
-                // Using transform3d for hardware acceleration
-                star.style.transform = `translate3d(0, ${scrollY * 0.05 * depth * animationIntensity}px, 0) rotate(${rotation}deg)`;
+                // Using translate3d for hardware acceleration
+                // Rounded values for better performance
+                const translateY = Math.round(scrollY * 0.04 * depth * optimizedIntensity);
+                star.style.transform = `translate3d(0, ${translateY}px, 0) rotate(${rotation}deg)`;
 
-                // Apply subtle opacity variation for twinkling effect
-                const opacityVariation = 0.8 + (Math.sin(scrollY * 0.001 + index) * 0.1);
-                star.style.opacity = opacityVariation;
+                // Simplified opacity calculation - less frequent updates
+                if (scrollY % 5 === 0) {
+                    const opacityVariation = 0.8 + (Math.sin(scrollY * 0.0005 + index) * 0.1);
+                    star.style.opacity = opacityVariation.toFixed(2); // Limit decimal precision
+                }
             });
 
-            // Animate nebulas with parallax effect - move in different directions
+            // Animate nebulas with parallax effect - only if they're near the viewport
             nebulas.forEach((nebula, index) => {
-                // Alternate between left/right movement for varied effect
-                const direction = index % 2 === 0 ? 1 : -1;
+                const nebulaBounds = nebula.getBoundingClientRect();
+                const nebulaTop = nebulaBounds.top + scrollY;
+                const nebulaBottom = nebulaBounds.bottom + scrollY;
 
-                // Each nebula moves at slightly different speed
-                const speed = 0.02 + (index * 0.01);
+                // Only animate if near viewport (with buffer)
+                if (nebulaBottom + 300 >= viewportTop && nebulaTop - 300 <= viewportBottom) {
+                    // Alternate between left/right movement for varied effect
+                    const direction = index % 2 === 0 ? 1 : -1;
 
-                // Calculate subtle scale effect based on scroll position
-                const scale = 1 + (Math.sin(scrollY * 0.001 + index) * 0.05);
+                    // Each nebula moves at slightly different speed - simplified calculation
+                    const speed = 0.015 + (index * 0.005);
 
-                // Apply diagonal translation and scale for more dynamic movement
-                // Using transform3d for hardware acceleration
-                nebula.style.transform = `translate3d(${scrollY * speed * direction * animationIntensity}px, ${scrollY * speed * animationIntensity}px, 0) scale(${scale})`;
+                    // Simplified scale calculation
+                    const scale = 1 + (Math.sin(scrollY * 0.0005 + index) * 0.03);
 
-                // Apply subtle opacity variation
-                const opacityVariation = 0.3 + (Math.sin(scrollY * 0.0005 + index) * 0.05);
-                nebula.style.opacity = opacityVariation;
+                    // Apply diagonal translation and scale for more dynamic movement
+                    // Using translate3d for hardware acceleration
+                    // Rounded values for better performance
+                    const translateX = Math.round(scrollY * speed * direction * optimizedIntensity);
+                    const translateY = Math.round(scrollY * speed * optimizedIntensity);
+                    nebula.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale.toFixed(2)})`;
+
+                    // Apply subtle opacity variation - less frequent updates
+                    if (scrollY % 5 === 0) {
+                        const opacityVariation = 0.3 + (Math.sin(scrollY * 0.0003 + index) * 0.05);
+                        nebula.style.opacity = opacityVariation.toFixed(2); // Limit decimal precision
+                    }
+                }
             });
 
             // Add subtle rotation to shooting stars based on scroll position
-            const shootingStars = document.querySelectorAll('.shooting-star');
-            shootingStars.forEach((star, index) => {
-                const rotationAngle = 20 + (scrollProgress * 5 * (index % 2 === 0 ? 1 : -1));
-                star.style.transform = `rotate(${rotationAngle}deg)`;
-            });
+            // Only update every few frames for better performance
+            if (scrollY % 3 === 0) {
+                const shootingStars = document.querySelectorAll('.shooting-star');
+                shootingStars.forEach((star, index) => {
+                    const rotationAngle = 20 + Math.round(scrollProgress * 5 * (index % 2 === 0 ? 1 : -1));
+                    star.style.transform = `rotate(${rotationAngle}deg)`;
+                });
+            }
 
             // Clear the animation frame ID since the animation is complete
             animationFrameId = null;
         });
     }
 
-    // Smooth Scrolling for Anchor Links - animated page navigation
+    // Enhanced Smooth Scrolling for Anchor Links - optimized for performance
     let isScrolling = false;
-    const scrollDuration = 1000; // Base duration in milliseconds
+    const scrollDuration = 800; // Reduced base duration for snappier feel (ms)
 
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -278,9 +310,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (Math.abs(distance) < 5) return;
 
             // Adjust duration based on distance (faster for shorter distances)
+            // Using a more responsive curve for duration adjustment
             const adjustedDuration = Math.min(
                 scrollDuration,
-                scrollDuration * Math.abs(distance) / 1000
+                scrollDuration * (0.5 + Math.abs(distance) / 2000)
             );
 
             // Set flag to prevent multiple simultaneous scroll animations
@@ -289,11 +322,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Timestamp of when the animation started
             let startTime = null;
 
-            // Easing function for natural-feeling animation
-            function easeInOutQuart(t) {
-                return t < 0.5
-                    ? 8 * t * t * t * t
-                    : 1 - Math.pow(-2 * t + 2, 4) / 2;
+            // Optimized easing function - cubic-bezier approximation for smoother motion
+            // This provides a more natural feel with better performance
+            function easeOutQuint(t) {
+                return 1 - Math.pow(1 - t, 5);
             }
 
             // Scroll animation frame using requestAnimationFrame
@@ -303,17 +335,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Calculate time elapsed
                 const timeElapsed = currentTime - startTime;
                 const progress = Math.min(timeElapsed / adjustedDuration, 1);
-                const easedProgress = easeInOutQuart(progress);
+                const easedProgress = easeOutQuint(progress);
 
-                // Apply the scroll
-                window.scrollTo(0, startPosition + distance * easedProgress);
+                // Apply the scroll with hardware acceleration hint
+                window.scrollTo({
+                    top: startPosition + distance * easedProgress,
+                    behavior: 'auto' // We're handling the animation ourselves
+                });
 
                 // Continue animation if not complete
                 if (timeElapsed < adjustedDuration) {
                     requestAnimationFrame(scrollAnimation);
                 } else {
                     // Ensure we land exactly on target
-                    window.scrollTo(0, targetPosition);
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'auto'
+                    });
                     isScrolling = false;
 
                     // Set focus to the target for accessibility
@@ -330,15 +368,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Section Reveal Animation - fade in sections as they enter viewport
     const allSections = document.querySelectorAll('section');
 
-    // Create and inject CSS animations directly in JS
+    // Create and inject optimized CSS animations directly in JS
     const style = document.createElement('style');
     style.textContent = `
         /* Base section animation - initial state */
         section {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.9s cubic-bezier(0.25, 0.1, 0.25, 1),
-                        transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transform: translateY(20px); /* Reduced distance for smoother animation */
+            transition:
+                opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), /* Optimized timing function */
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* Reduced duration */
             will-change: opacity, transform;
         }
 
@@ -348,60 +387,58 @@ document.addEventListener('DOMContentLoaded', function() {
             transform: translateY(0);
         }
 
-        /* Staggered animations for child elements */
+        /* Staggered animations for child elements - optimized for performance */
         section.active-section h1 {
-            animation: fadeSlideIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1.4) forwards;
+            animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; /* Faster animation */
             animation-delay: 0.1s;
         }
 
         section.active-section h2 {
-            animation: fadeSlideIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1.4) forwards;
-            animation-delay: 0.2s;
+            animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 0.15s; /* Reduced delay between elements */
         }
 
         section.active-section p {
-            animation: fadeSlideIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1.4) forwards;
-            animation-delay: 0.3s;
+            animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 0.2s;
         }
 
         section.active-section button {
-            animation: fadeSlideIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1.4) forwards;
-            animation-delay: 0.4s;
+            animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 0.25s;
         }
 
-        /* Progressive loading for list items */
+        /* Progressive loading for list items - simplified for better performance */
         section.active-section li {
-            animation: fadeSlideIn 0.6s cubic-bezier(0.25, 0.1, 0.25, 1.4) forwards;
+            animation: fadeSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             opacity: 0;
         }
 
-        section.active-section li:nth-child(1) { animation-delay: 0.3s; }
-        section.active-section li:nth-child(2) { animation-delay: 0.4s; }
-        section.active-section li:nth-child(3) { animation-delay: 0.5s; }
-        section.active-section li:nth-child(4) { animation-delay: 0.6s; }
-        section.active-section li:nth-child(5) { animation-delay: 0.7s; }
-        section.active-section li:nth-child(n+6) { animation-delay: 0.8s; }
+        /* Reduced number of specific selectors for better performance */
+        section.active-section li:nth-child(1) { animation-delay: 0.2s; }
+        section.active-section li:nth-child(2) { animation-delay: 0.25s; }
+        section.active-section li:nth-child(3) { animation-delay: 0.3s; }
+        section.active-section li:nth-child(n+4) { animation-delay: 0.35s; } /* Group remaining items */
 
-        /* Service cards staggered animation */
+        /* Service cards staggered animation - optimized for performance */
         section.active-section .service-card {
-            animation: fadeScaleIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1.4) forwards;
+            animation: fadeScaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             opacity: 0;
-            transform: scale(0.95);
+            transform: scale(0.98); /* Less dramatic scale for smoother animation */
         }
 
+        /* Reduced number of specific selectors for better performance */
         section.active-section .service-card:nth-child(1) { animation-delay: 0.1s; }
-        section.active-section .service-card:nth-child(2) { animation-delay: 0.2s; }
-        section.active-section .service-card:nth-child(3) { animation-delay: 0.3s; }
-        section.active-section .service-card:nth-child(4) { animation-delay: 0.4s; }
-        section.active-section .service-card:nth-child(5) { animation-delay: 0.5s; }
-        section.active-section .service-card:nth-child(6) { animation-delay: 0.6s; }
-        section.active-section .service-card:nth-child(n+7) { animation-delay: 0.7s; }
+        section.active-section .service-card:nth-child(2) { animation-delay: 0.15s; }
+        section.active-section .service-card:nth-child(3) { animation-delay: 0.2s; }
+        section.active-section .service-card:nth-child(4) { animation-delay: 0.25s; }
+        section.active-section .service-card:nth-child(n+5) { animation-delay: 0.3s; } /* Group remaining items */
 
-        /* Animation keyframes */
+        /* Optimized animation keyframes - smaller transforms for better performance */
         @keyframes fadeSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(15px); /* Reduced distance */
             }
             to {
                 opacity: 1;
@@ -412,7 +449,7 @@ document.addEventListener('DOMContentLoaded', function() {
         @keyframes fadeScaleIn {
             from {
                 opacity: 0;
-                transform: scale(0.95);
+                transform: scale(0.98); /* Less dramatic scale */
             }
             to {
                 opacity: 1;
@@ -420,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        /* Ensure elements are hidden before animation */
+        /* Simplified selector for hidden elements - better performance */
         section:not(.active-section) h1,
         section:not(.active-section) h2,
         section:not(.active-section) p,
@@ -433,46 +470,96 @@ document.addEventListener('DOMContentLoaded', function() {
     document.head.appendChild(style);
 
     // Use IntersectionObserver to efficiently detect when sections enter viewport
+    // This is more performant than scroll event based detection
     const sectionObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            // Only reveal section when it enters the viewport
-            if (entry.isIntersecting) {
-                const section = entry.target;
-                section.classList.add('active-section');
+        // Process all entries in a single animation frame for better performance
+        requestAnimationFrame(() => {
+            entries.forEach(entry => {
+                // Only reveal section when it enters the viewport
+                if (entry.isIntersecting) {
+                    const section = entry.target;
+                    section.classList.add('active-section');
 
-                // Stop observing once the section is revealed
-                // This prevents unnecessary processing
-                observer.unobserve(section);
-            }
+                    // Stop observing once the section is revealed
+                    // This prevents unnecessary processing
+                    observer.unobserve(section);
+                }
+            });
         });
     }, {
         root: null, // Use viewport as root
-        threshold: 0.15, // Trigger when 15% of the section is visible
-        rootMargin: '-100px 0px' // Offset trigger point by 100px
+        threshold: 0.1, // Reduced threshold for earlier triggering (10% visibility)
+        rootMargin: '-80px 0px' // Adjusted offset for better timing
     });
 
-    // Start observing all sections
-    allSections.forEach(section => {
-        sectionObserver.observe(section);
-    });
+    // Start observing all sections - batch in chunks for better performance
+    // This prevents too many simultaneous calculations
+    const observeSections = (index = 0, batchSize = 5) => {
+        const end = Math.min(index + batchSize, allSections.length);
 
-    // Fallback for browsers without IntersectionObserver support
+        for (let i = index; i < end; i++) {
+            sectionObserver.observe(allSections[i]);
+        }
+
+        if (end < allSections.length) {
+            // Schedule next batch in next animation frame
+            requestAnimationFrame(() => {
+                observeSections(end, batchSize);
+            });
+        }
+    };
+
+    // Start the batched observation process
+    observeSections();
+
+    // Optimized fallback for browsers without IntersectionObserver support
     function revealSections() {
         // Skip if IntersectionObserver is supported
         if ('IntersectionObserver' in window) return;
 
         const windowHeight = window.innerHeight;
-        const revealPoint = 150; // Trigger animation 150px before section enters viewport
+        const revealPoint = 120; // Reduced trigger point for better performance
 
-        allSections.forEach(section => {
-            // Get section's position relative to the viewport
-            const sectionTop = section.getBoundingClientRect().top;
+        // Use a more efficient loop with caching
+        const sectionsLength = allSections.length;
 
-            // Check if section has entered the reveal threshold
-            if (sectionTop < windowHeight - revealPoint) {
-                section.classList.add('active-section');
+        // Process sections in batches for better performance
+        let processedCount = 0;
+
+        // Process a batch of sections
+        function processBatch(startIndex, count) {
+            const endIndex = Math.min(startIndex + count, sectionsLength);
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const section = allSections[i];
+
+                // Skip sections that are already active
+                if (section.classList.contains('active-section')) {
+                    continue;
+                }
+
+                // Get section's position relative to the viewport
+                const sectionTop = section.getBoundingClientRect().top;
+
+                // Check if section has entered the reveal threshold
+                if (sectionTop < windowHeight - revealPoint) {
+                    section.classList.add('active-section');
+                }
             }
-        });
+
+            // Update processed count
+            processedCount = endIndex;
+
+            // If there are more sections to process, schedule next batch
+            if (processedCount < sectionsLength) {
+                setTimeout(() => {
+                    processBatch(processedCount, 3); // Process 3 sections at a time
+                }, 16); // Roughly one frame at 60fps
+            }
+        }
+
+        // Start processing sections in batches
+        processBatch(0, 3);
     }
 
     // Main scroll event handler - optimized for performance
@@ -480,7 +567,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Throttle variables to prevent too many scroll events
     let scrollTimeout;
     let lastScrollTime = 0;
-    const scrollThrottleDelay = 10; // ms between scroll processing
+    const scrollThrottleDelay = 16; // ms between scroll processing (roughly 60fps)
 
     // Track if the page is visible to pause animations when tab is inactive
     let pageIsVisible = true;
@@ -490,7 +577,7 @@ document.addEventListener('DOMContentLoaded', function() {
         pageIsVisible = document.visibilityState === 'visible';
     });
 
-    // Main scroll handler with throttling
+    // Highly optimized main scroll handler with improved throttling
     window.addEventListener('scroll', function() {
         // Skip processing if page is not visible
         if (!pageIsVisible) return;
@@ -498,23 +585,35 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get current time for throttling
         const now = performance.now();
 
-        // Process critical animations immediately (navbar)
+        // Process navbar immediately for responsiveness
         handleNavbarScroll();
 
-        // Throttle other animations for performance
+        // Throttle other animations for better performance
+        // Increased throttle delay for smoother performance
         if (now - lastScrollTime > scrollThrottleDelay) {
             lastScrollTime = now;
 
-            // Use requestAnimationFrame to sync with browser refresh
+            // Use requestAnimationFrame to sync with browser refresh cycle
             cancelAnimationFrame(scrollTimeout);
             scrollTimeout = requestAnimationFrame(() => {
-                // Process in order of visual importance
-                highlightNavOnScroll();  // Update active navigation links
-                animateBackground();     // Animate parallax background elements
+                // Process in order of visual importance and performance impact
 
-                // Only run the legacy reveal if IntersectionObserver is not supported
-                if (!('IntersectionObserver' in window)) {
-                    revealSections();    // Reveal sections as they enter viewport
+                // 1. Update active navigation links - lightweight operation
+                highlightNavOnScroll();
+
+                // 2. Conditionally animate background with reduced intensity
+                // Only animate background if not on a mobile device and if the function exists
+                if (!isLowPoweredDevice && typeof animateBackground === 'function') {
+                    // Reduce animation frequency for better performance
+                    if (now % 3 === 0) { // Only run every 3rd frame approximately
+                        animateBackground();
+                    }
+                }
+
+                // 3. Only run the legacy reveal as fallback
+                // Only run if IntersectionObserver is not supported and if the function exists
+                if (!('IntersectionObserver' in window) && typeof revealSections === 'function') {
+                    revealSections();
                 }
             });
         }
@@ -678,24 +777,44 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add the button to the document
         document.body.appendChild(scrollTopBtn);
 
-        // Function to toggle button visibility
+        // Optimized function to toggle button visibility
+        // Using throttling to prevent excessive updates
+        let isTogglingButton = false;
+        let lastScrollY = 0;
+        const scrollThreshold = 300;
+
         function toggleScrollTopButton() {
-            if (window.pageYOffset > 300) {
-                if (!scrollTopBtn.classList.contains('visible')) {
-                    scrollTopBtn.classList.add('visible');
+            // Skip if already processing
+            if (isTogglingButton) return;
+
+            isTogglingButton = true;
+
+            // Use requestAnimationFrame for better performance
+            requestAnimationFrame(() => {
+                const currentScrollY = window.pageYOffset;
+
+                // Only update if scroll position changed significantly
+                if (Math.abs(currentScrollY - lastScrollY) > 50) {
+                    if (currentScrollY > scrollThreshold) {
+                        if (!scrollTopBtn.classList.contains('visible')) {
+                            scrollTopBtn.classList.add('visible');
+                        }
+                    } else {
+                        if (scrollTopBtn.classList.contains('visible')) {
+                            scrollTopBtn.classList.remove('visible');
+                        }
+                    }
+
+                    lastScrollY = currentScrollY;
                 }
-            } else {
-                if (scrollTopBtn.classList.contains('visible')) {
-                    scrollTopBtn.classList.remove('visible');
-                }
-            }
+
+                isTogglingButton = false;
+            });
         }
 
         // Add scroll event listener to toggle button visibility
-        window.addEventListener('scroll', function() {
-            // Use requestAnimationFrame for better performance
-            requestAnimationFrame(toggleScrollTopButton);
-        });
+        // Using passive event for better performance
+        window.addEventListener('scroll', toggleScrollTopButton, { passive: true });
 
         // Add click event listener to scroll to top
         scrollTopBtn.addEventListener('click', function(e) {
@@ -703,21 +822,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Use the enhanced smooth scrolling function
             const startPosition = window.pageYOffset;
-            const duration = 800; // ms
+            const duration = 600; // Reduced duration for snappier feel
             let startTime = null;
+
+            // Optimized easing function - cubic-bezier approximation
+            function easeOutQuint(t) {
+                return 1 - Math.pow(1 - t, 5);
+            }
 
             function scrollAnimation(currentTime) {
                 if (startTime === null) startTime = currentTime;
 
                 const timeElapsed = currentTime - startTime;
                 const progress = Math.min(timeElapsed / duration, 1);
+                const easedProgress = easeOutQuint(progress);
 
-                // Use easeInOutQuart easing function for natural feel
-                const easedProgress = progress < 0.5
-                    ? 8 * progress * progress * progress * progress
-                    : 1 - Math.pow(-2 * progress + 2, 4) / 2;
-
-                window.scrollTo(0, startPosition * (1 - easedProgress));
+                // Use object syntax for better browser compatibility
+                window.scrollTo({
+                    top: startPosition * (1 - easedProgress),
+                    behavior: 'auto' // We're handling the animation ourselves
+                });
 
                 if (timeElapsed < duration) {
                     requestAnimationFrame(scrollAnimation);
@@ -732,4 +856,30 @@ document.addEventListener('DOMContentLoaded', function() {
     addScrollToTopButton();
 
     // TODO: Implement form submission handler for contact forms
+
+    // Mark the end of DOM content initialization
+    if (window.performance && window.performance.mark) {
+        window.performance.mark('dom-init-complete');
+        window.performance.measure('dom-content-to-init', 'dom-content-loaded', 'dom-init-complete');
+    }
+});
+
+// Window load event - all resources loaded
+window.addEventListener('load', function() {
+    // Mark window load complete for performance measurement
+    if (window.performance && window.performance.mark) {
+        window.performance.mark('window-load-complete');
+        window.performance.measure('init-to-load', 'dom-init-complete', 'window-load-complete');
+        window.performance.measure('total-page-load', 'page-start', 'window-load-complete');
+
+        // Log performance metrics to console in development
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            const perfEntries = performance.getEntriesByType('measure');
+            console.group('Performance Metrics:');
+            perfEntries.forEach(measure => {
+                console.log(`${measure.name}: ${Math.round(measure.duration)}ms`);
+            });
+            console.groupEnd();
+        }
+    }
 });
