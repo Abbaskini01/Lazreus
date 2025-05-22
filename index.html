@@ -46,6 +46,31 @@
         - Add meta tags for SEO and social sharing
     -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="images.css">
+
+    <style>
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+    </style>
 
     <!-- Performance optimization script - runs before page load -->
     <script>
@@ -187,6 +212,7 @@
     - This section has the ID "home" for direct linking and scroll tracking
     -->
     <section id="home">
+        <img src="images/hero-bg.jpg" alt="Digital technology background" class="hero-image">
         <h1>Empowering Small Businesses with Cutting-Edge Tech Solutions</h1>
         <p>Lazreus Tech is a modern digital solutions company dedicated to empowering small businesses and emerging enterprises. We specialize in delivering comprehensive technology services that help our clients streamline operations, enhance user experiences, and scale effectively in today's fast-paced digital economy.</p>
         <button>Explore Our Services</button>
@@ -207,6 +233,7 @@
     -->
     <section id="about">
         <h2>About Lazreus Tech</h2>
+        <img src="images/about-us.jpg" alt="Our team collaborating" class="about-image img-shadow">
         <div class="company-info">
             <p><strong>Founded:</strong> 2025</p>
             <p><strong>Type:</strong> Private</p>
@@ -254,34 +281,42 @@
             - Track clicks on these links for conversion analytics
             -->
             <div class="service-card">
+                <img src="images/website-dev.jpg" alt="Website Development" class="service-card-img">
                 <h3><a href="website-development.html">Website Development</a></h3>
                 <p>Custom, responsive, and scalable websites tailored to brand needs</p>
             </div>
             <div class="service-card">
+                <img src="images/app-dev.jpg" alt="App Development" class="service-card-img">
                 <h3><a href="app-development.html">App Development</a></h3>
                 <p>Cross-platform and native applications designed for performance and user engagement</p>
             </div>
             <div class="service-card">
+                <img src="images/devops.jpg" alt="DevOps Services" class="service-card-img">
                 <h3><a href="devops-services.html">DevOps Services</a></h3>
                 <p>CI/CD pipelines, cloud infrastructure, and deployment automation</p>
             </div>
             <div class="service-card">
+                <img src="images/ux-design.jpg" alt="UX Design" class="service-card-img">
                 <h3><a href="ux-design.html">UX Design</a></h3>
                 <p>Human-centered design strategies to improve product usability and experience</p>
             </div>
             <div class="service-card">
+                <img src="images/creative.jpg" alt="Creative Services" class="service-card-img">
                 <h3><a href="creative-services.html">Creative Services</a></h3>
                 <p>Poster designs, video editing, promotional materials for brand awareness</p>
             </div>
             <div class="service-card">
+                <img src="images/promotional.jpg" alt="Promotional Assistance" class="service-card-img">
                 <h3><a href="promotional-assistance.html">Promotional Assistance</a></h3>
                 <p>Social media marketing support, ad strategy consultation</p>
             </div>
             <div class="service-card">
+                <img src="images/inventory.jpg" alt="Inventory Management" class="service-card-img">
                 <h3><a href="inventory-management.html">Inventory Management</a></h3>
                 <p>Custom tools to streamline business operations and track stock effectively</p>
             </div>
             <div class="service-card">
+                <img src="images/wearables.jpg" alt="Wearables" class="service-card-img">
                 <h3><a href="wearables.html">Wearables</a></h3>
                 <p>Custom hoodies, shirts to upscale or promote your business</p>
             </div>
@@ -299,15 +334,18 @@
     - Consider adding testimonials from each audience segment
     - This information can be used for personalization based on visitor data
     -->
-    <section>
+    <section id="target-audience">
         <h2>Our Target Audience</h2>
-        <ul>
-            <li>Startups and early-stage companies</li>
-            <li>Local and small businesses</li>
-            <li>E-commerce platforms</li>
-            <li>Service-based businesses</li>
-            <li>Agencies seeking outsourcing support</li>
-        </ul>
+        <div class="section-content">
+            <img src="images/target-audience.jpg" alt="Business professionals in a meeting" class="section-image-right img-rounded img-shadow">
+            <ul>
+                <li>Startups and early-stage companies</li>
+                <li>Local and small businesses</li>
+                <li>E-commerce platforms</li>
+                <li>Service-based businesses</li>
+                <li>Agencies seeking outsourcing support</li>
+            </ul>
+        </div>
     </section>
 
     <!--
@@ -321,14 +359,17 @@
     - Consider adding icons or visual elements to each point
     - This content should be regularly reviewed and updated based on market analysis
     -->
-    <section>
+    <section id="advantage">
         <h2>Our Competitive Advantage</h2>
-        <ul>
-            <li>End-to-end solutions from design to deployment</li>
-            <li>Personalized client approach with transparent communication</li>
-            <li>Emphasis on scalability, performance, and design</li>
-            <li>Agile and collaborative workflows</li>
-        </ul>
+        <div class="section-content">
+            <img src="images/advantage.jpg" alt="Team collaboration" class="section-image-left img-rounded img-shadow">
+            <ul>
+                <li>End-to-end solutions from design to deployment</li>
+                <li>Personalized client approach with transparent communication</li>
+                <li>Emphasis on scalability, performance, and design</li>
+                <li>Agile and collaborative workflows</li>
+            </ul>
+        </div>
     </section>
 
     <!--
@@ -342,9 +383,12 @@
     - Consider adding a timeline or roadmap visualization
     - This section could be expanded with specific upcoming features or services
     -->
-    <section>
+    <section id="future">
         <h2>Future Outlook</h2>
-        <p>Lazreus Tech plans to expand its offerings to include AI-based tools, analytics dashboards, and SaaS products aimed at operational efficiency and customer engagement.</p>
+        <div class="section-content">
+            <img src="images/future-tech-new.jpg" alt="Advanced AI and analytics technology" class="section-image img-rounded img-shadow">
+            <p>Lazreus Tech plans to expand its offerings to include AI-based tools, analytics dashboards, and SaaS products aimed at operational efficiency and customer engagement.</p>
+        </div>
     </section>
 
     <!--
@@ -463,5 +507,9 @@
         </div>
     </footer>
     </div><!-- End of content-wrapper -->
+
+    <a href="https://wa.me/919885887272" class="whatsapp-float" target="_blank" aria-label="Contact us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 </body>
 </html>

@@ -1,0 +1,226 @@
+/**
+ * Lazreus Tech - Image Styling
+ *
+ * This CSS file contains styles for images across the Lazreus Tech website.
+ * It is organized in sections for easier maintenance:
+ *
+ * 1. Global Image Styles
+ * 2. Hero Section Images
+ * 3. Service Card Images
+ * 4. About Section Images
+ * 5. Content Section Images
+ * 6. Responsive Image Adjustments
+ *
+ * Note for backend developers:
+ * - All images are optimized for web performance
+ * - Responsive image handling is included
+ * - Consider implementing lazy loading for production
+ */
+
+/* ===== 1. GLOBAL IMAGE STYLES ===== */
+
+.img-responsive {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.img-rounded {
+    border-radius: 8px;
+}
+
+.img-circle {
+    border-radius: 50%;
+}
+
+.img-shadow {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.img-overlay {
+    position: relative;
+    overflow: hidden;
+}
+
+.img-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(11, 11, 43, 0.3), rgba(27, 39, 53, 0.7));
+    z-index: 1;
+}
+
+.img-overlay img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.img-overlay:hover img {
+    transform: scale(1.05);
+}
+
+.img-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px;
+    background: rgba(11, 11, 43, 0.7);
+    color: white;
+    z-index: 2;
+}
+
+/* ===== 2. HERO SECTION IMAGES ===== */
+
+.hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.2;
+    z-index: -1;
+}
+
+#home {
+    position: relative;
+    overflow: hidden;
+}
+
+/* ===== 3. SERVICE CARD IMAGES ===== */
+
+.service-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.service-card:hover .service-card-img {
+    opacity: 0.9;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== 4. ABOUT SECTION IMAGES ===== */
+
+.about-image {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    margin: 20px auto;
+    display: block;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.about-image:hover {
+    opacity: 1;
+}
+
+/* ===== 5. CONTENT SECTION IMAGES ===== */
+
+.section-image {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 10px;
+    margin: 20px auto;
+    display: block;
+    opacity: 0.8;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.section-image:hover {
+    opacity: 1;
+    transform: scale(1.02);
+}
+
+.section-image-left {
+    float: left;
+    margin-right: 30px;
+    margin-bottom: 20px;
+    max-width: 300px;
+}
+
+.section-image-right {
+    float: right;
+    margin-left: 30px;
+    margin-bottom: 20px;
+    max-width: 300px;
+}
+
+/* Service page specific images */
+.service-hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.2;
+    z-index: -1;
+}
+
+.service-hero {
+    position: relative;
+    overflow: hidden;
+}
+
+/* ===== 6. RESPONSIVE IMAGE ADJUSTMENTS ===== */
+
+@media (max-width: 768px) {
+    .section-image-left,
+    .section-image-right {
+        float: none;
+        margin: 20px auto;
+        max-width: 100%;
+    }
+    
+    .service-card-img {
+        height: 140px;
+    }
+}
+
+@media (max-width: 576px) {
+    .service-card-img {
+        height: 120px;
+    }
+    
+    .about-image,
+    .section-image {
+        max-width: 100%;
+    }
+}
+
+/* Optimize for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .img-overlay img,
+    .service-card,
+    .section-image,
+    .about-image {
+        transition: none !important;
+    }
+    
+    .img-overlay:hover img,
+    .section-image:hover {
+        transform: none !important;
+    }
+}
